@@ -1,17 +1,26 @@
+from ajax_select import make_ajax_form
+from ajax_select.admin import AjaxSelectAdmin
 from django.contrib import admin
 from .models import Category, Product, ProductQuestion, ProductAnswer
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(AjaxSelectAdmin):
     prepopulated_fields = {"slug": ('name',)}
     list_filter = ['hidden']
     list_display = ('id', 'name', 'parent', 'hidden')
+    form = make_ajax_form(Category, {
+        'parent': 'categories'
+    })
 
 
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(AjaxSelectAdmin):
     prepopulated_fields = {"slug": ('name',)}
     list_filter = ['status']
     list_display = ('id', 'name', 'short_description', 'status')
+    form = make_ajax_form(Product, {
+        'user': 'user',
+        'categories': 'categories'
+    })
 
 
 class ProductAnswerInline(admin.StackedInline):
